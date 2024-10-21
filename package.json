@@ -5,6 +5,7 @@
   "scripts": {
     "shopify": "shopify",
     "build": "echo 'No build step required for production'",
+    "start": "node index.js",
     "dev": "shopify app dev",
     "info": "shopify app info",
     "generate": "shopify app generate",
