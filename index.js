@@ -2,20 +2,31 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Пример простой логики для Shopify Function Discounts
+app.use(express.json()); // Позволяем серверу обрабатывать JSON запросы
+
+// Маршрут для создания скидки
+app.get('/apply-discount', (req, res) => {
+  res.send('Discount creation page');
+});
+
+// Маршрут для отображения деталей скидки
+app.get('/discount-details', (req, res) => {
+  res.send('Discount details page');
+});
+
+// Логика применения скидок
 app.post('/apply-discount', (req, res) => {
-  const cavalliProductId = 'gid://shopify/Product/10260757053771'; // Замените на ваш реальный GID продукта Cavalli
+  const cavalliProductId = 'gid://shopify/Product/10260757053771'; // GID продукта Cavalli
   let cavalliInCart = false;
   let discounts = [];
 
-  // Пример проверки товаров в корзине
-  const cart = req.body.cart; // Здесь должно быть тело запроса с данными корзины
+  const cart = req.body.cart;
+
   for (const cartLine of cart.lines) {
     if (cartLine.merchandise.__typename === 'ProductVariant') {
       if (cartLine.merchandise.product.id === cavalliProductId) {
         cavalliInCart = true;
       } else {
-        // Применяем скидку ко всем товарам, кроме Cavalli
         discounts.push({
           message: '10% Discount applied',
           targets: [
@@ -27,7 +38,7 @@ app.post('/apply-discount', (req, res) => {
           ],
           value: {
             percentage: {
-              value: 10.0, // Процент скидки
+              value: 10.0,
             },
           },
         });
@@ -35,7 +46,6 @@ app.post('/apply-discount', (req, res) => {
     }
   }
 
-  // Возвращаем результат применения скидки
   res.json({
     discounts,
     discountApplicationStrategy: 'MAXIMUM',
