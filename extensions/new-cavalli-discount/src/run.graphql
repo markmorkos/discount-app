@@ -1,7 +1,8 @@
 query RunInput {
-  discountNode {
-    metafield(namespace: "$app:new-cavalli-discount", key: "function-configuration") {
-      value
+  cart {
+    lines {
+      id
+      quantity
     }
   }
 }

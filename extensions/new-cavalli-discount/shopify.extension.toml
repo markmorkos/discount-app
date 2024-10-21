@@ -1,10 +1,15 @@
 api_version = "2024-10"
 
+[access_scopes]
+scopes = "write_products, write_discounts, write_discounts_allocator_functions, read_products"
+
 [[extensions]]
 name = "t:name"
 handle = "new-cavalli-discount"
 type = "function"
 description = "t:description"
+application_url = "https://discount-cavalli-71a6b6a2c05e.herokuapp.com/"
+embedded = true
 
   [[extensions.targeting]]
   target = "purchase.product-discount.run"
