@@ -4,7 +4,6 @@ api_version = "2024-10"
 name = "t:name"
 handle = "new-cavalli-discount"
 type = "function"
-
 description = "t:description"
 
   [[extensions.targeting]]
@@ -17,5 +16,5 @@ description = "t:description"
   path = "dist/function.wasm"
 
   [extensions.ui.paths]
-  create = "/"
-  details = "/"
+  create = "/apply-discount"   # Укажите здесь правильный маршрут для создания скидки
+  details = "/discount-details" # Укажите здесь правильный маршрут для отображения деталей скидки
