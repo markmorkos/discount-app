@@ -11,10 +11,12 @@
     "generate": "shopify app generate",
     "deploy": "shopify app deploy"
   },
-  "dependencies": {},
+  "dependencies": {
+    "express": "^4.21.1"
+  },
   "devDependencies": {
     "@shopify/cli": "^3.0.0"
-  }, 
+  },
   "trustedDependencies": [
     "@shopify/plugin-cloudflare"
   ],
