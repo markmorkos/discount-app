@@ -2,21 +2,21 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(express.json()); // Позволяем серверу обрабатывать JSON запросы
+app.use(express.json());
 
 // Маршрут для создания скидки
-app.get('/apply-discount', (req, res) => {
-  res.send('Discount creation page');
+app.get('/discounts/create', (req, res) => {
+  res.send('This is the page where you create discounts.');
 });
 
 // Маршрут для отображения деталей скидки
-app.get('/discount-details', (req, res) => {
-  res.send('Discount details page');
+app.get('/discounts/details', (req, res) => {
+  res.send('This is the page where you see discount details.');
 });
 
-// Логика применения скидок
+// Пример логики для применения скидки через POST-запрос
 app.post('/apply-discount', (req, res) => {
-  const cavalliProductId = 'gid://shopify/Product/10260757053771'; // GID продукта Cavalli
+  const cavalliProductId = 'gid://shopify/Product/10260757053771'; 
   let cavalliInCart = false;
   let discounts = [];
 

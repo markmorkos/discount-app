@@ -16,5 +16,5 @@ description = "t:description"
   path = "dist/function.wasm"
 
   [extensions.ui.paths]
-  create = "/apply-discount"   # Укажите здесь правильный маршрут для создания скидки
-  details = "/discount-details" # Укажите здесь правильный маршрут для отображения деталей скидки
+  create = "/discounts/create"    # Вместо "/" укажите более специфичный маршрут
+  details = "/discounts/details"  # Вместо "/" укажите более специфичный маршрут
