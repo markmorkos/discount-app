@@ -21,32 +21,46 @@ const EMPTY_DISCOUNT = {
  * @returns {FunctionRunResult}
  */
 export function run(input) {
+  const cavalliProductId = 'gid://shopify/Product/10260757053771';
+  let cavalliInCart = false;
+
+  // Проверяем, есть ли Cavalli в корзине
+  for (const line of input.cart.lines) {
+    if (line.merchandise.__typename === 'ProductVariant' && line.merchandise.product.id === cavalliProductId) {
+      cavalliInCart = true;
+      break; // Если Cavalli найден, можем прекратить проверку
+    }
+  }
+
+  // Если Cavalli отсутствует в корзине, не применяем скидку
+  if (!cavalliInCart) {
+    console.error("Cavalli product not in cart. No discount applied.");
+    return EMPTY_DISCOUNT;
+  }
+
+  // Применяем скидку ко всем товарам, кроме Cavalli
   const targets = input.cart.lines
-    // Only include cart lines with a quantity of two or more
-    .filter((line) => line.quantity >= 2)
+    .filter((line) => line.merchandise.__typename === 'ProductVariant' && line.merchandise.product.id !== cavalliProductId)
     .map((line) => {
       return /** @type {Target} */ ({
-        // Use the cart line ID to create a discount target
         cartLine: {
           id: line.id,
         },
       });
     });
+
   if (!targets.length) {
-    // You can use STDERR for debug logs in your function
-    console.error("No cart lines qualify for volume discount.");
+    console.error("No cart lines qualify for discount.");
     return EMPTY_DISCOUNT;
   }
 
   return {
     discounts: [
       {
-        // Apply the discount to the collected targets
         targets,
-        // Define a percentage-based discount
         value: {
           percentage: {
-            value: "10.0",
+            value: "10.0", // Указываем процент скидки
           },
         },
       },
@@ -54,3 +68,4 @@ export function run(input) {
     discountApplicationStrategy: DiscountApplicationStrategy.First,
   };
 }
+
