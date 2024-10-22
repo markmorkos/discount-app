@@ -1,59 +1,56 @@
 // @ts-check
 import { DiscountApplicationStrategy } from "../generated/api";
 
+// Use JSDoc annotations for type safety
 /**
  * @typedef {import("../generated/api").RunInput} RunInput
  * @typedef {import("../generated/api").FunctionRunResult} FunctionRunResult
+ * @typedef {import("../generated/api").Target} Target
+ * @typedef {import("../generated/api").ProductVariant} ProductVariant
  */
 
-export default function applyDiscountFunction(input) {
-  const cavalliProductId = 'gid://shopify/Product/10260757053771'; // Замените на ваш реальный GID продукта Cavalli
-  let cavalliInCart = false;
-
-  // Проверяем, есть ли продукт Cavalli в корзине
-  for (const cartLine of input.cart.lines) {
-    if (cartLine.merchandise.__typename === 'ProductVariant') {
-      if (cartLine.merchandise.product.id === cavalliProductId) {
-        cavalliInCart = true;
-        break;
-      }
-    }
+/**
+ * @type {FunctionRunResult}
+ */
+const EMPTY_DISCOUNT = {
+  discountApplicationStrategy: DiscountApplicationStrategy.First,
+  discounts: [],
+};
+/**
+ * @param {RunInput} input
+ * @returns {FunctionRunResult}
+ */
+export function run(input) {
+  const targets = input.cart.lines
+    // Only include cart lines with a quantity of two or more
+    .filter((line) => line.quantity >= 2)
+    .map((line) => {
+      return /** @type {Target} */ ({
+        // Use the cart line ID to create a discount target
+        cartLine: {
+          id: line.id,
+        },
+      });
+    });
+  if (!targets.length) {
+    // You can use STDERR for debug logs in your function
+    console.error("No cart lines qualify for volume discount.");
+    return EMPTY_DISCOUNT;
   }
 
-    const discounts = [];
-
-    // Если Cavalli найден, применяем скидку ко всем другим товарам
-    for (const cartLine of input.cart.lines) {
-      if (
-        cartLine.merchandise.__typename === 'ProductVariant' &&
-        cartLine.merchandise.product.id !== cavalliProductId
-      ) {
-        discounts.push({
-          message: 'Discount 10%',
-          targets: [
-            {
-              productVariant: {
-                id: cartLine.merchandise.id,
-              },
-            },
-          ],
-          value: {
-            percentage: {
-              value: 10.0, // Процент скидки
-            },
-          },
-        });
-      }
-    }
-
-    return {
-      discounts,
-      discountApplicationStrategy: DiscountApplicationStrategy.Maximum,
-    };
-
-  // Если продукта Cavalli нет в корзине, скидка не применяется
   return {
-    discounts: [],
+    discounts: [
+      {
+        // Apply the discount to the collected targets
+        targets,
+        // Define a percentage-based discount
+        value: {
+          percentage: {
+            value: "10.0",
+          },
+        },
+      },
+    ],
     discountApplicationStrategy: DiscountApplicationStrategy.First,
   };
 }
