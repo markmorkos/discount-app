@@ -20,7 +20,6 @@ export default function applyDiscountFunction(input) {
     }
   }
 
-  if (cavalliInCart) {
     const discounts = [];
 
     // Если Cavalli найден, применяем скидку ко всем другим товарам
@@ -51,7 +50,6 @@ export default function applyDiscountFunction(input) {
       discounts,
       discountApplicationStrategy: DiscountApplicationStrategy.Maximum,
     };
-  }
 
   // Если продукта Cavalli нет в корзине, скидка не применяется
   return {
