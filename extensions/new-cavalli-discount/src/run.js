@@ -26,7 +26,7 @@ export function run(input) {
 
   // Проверяем, есть ли Cavalli в корзине
   for (const line of input.cart.lines) {
-    if (line.merchandise.__typename === 'ProductVariant' && line.merchandise.product.id === cavalliProductId) {
+    if (line.merchandise.product.title.includes('Cavalli')) {
       cavalliInCart = true;
       break; // Если Cavalli найден, можем прекратить проверку
     }
@@ -40,7 +40,7 @@ export function run(input) {
 
   // Применяем скидку ко всем товарам, кроме Cavalli
   const targets = input.cart.lines
-    .filter((line) => line.merchandise.__typename === 'ProductVariant' && line.merchandise.product.id !== cavalliProductId)
+    .filter((line) => line.merchandise.product.title.includes('Cavalli'))
     .map((line) => {
       return /** @type {Target} */ ({
         cartLine: {
@@ -60,7 +60,7 @@ export function run(input) {
         targets,
         value: {
           percentage: {
-            value: "10.0", // Указываем процент скидки
+            value: "10.0", 
           },
         },
       },
